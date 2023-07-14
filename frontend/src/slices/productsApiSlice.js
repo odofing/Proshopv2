@@ -5,6 +5,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: () => ({
+        // url: 'http://localhost:5000/api/products'
         url: PRODUCTS_URL,
         // params: { keyword, pageNumber },
       }),

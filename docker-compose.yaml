@@ -1,0 +1,58 @@
+version: '3'
+services:
+  client:
+    build: 
+      context: './frontend'
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    container_name: client-container
+    environment:
+      - WATCHPACK_POLLING=true
+    networks:
+      - mern-docker-networks
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+  backend:
+      build:
+        context: './backend'
+        dockerfile: Dockerfile
+      environment:
+        - MONGO_USER=odofing
+        - MONGO_DB=proshopv2
+        - MONGO_PASSWORD=xgMFSXculTQd9rSu
+        - MONGO_IP=mongo # 'localhost' in ecs
+        - JWT_SECRET=23e8rfuvhnfej3iedu
+        - NODE_ENV=development
+  
+      ports:
+        - 5000:5000
+      container_name: server-container
+      networks:
+        - mern-docker-networks
+      volumes:
+        - ./backend:/app
+      depends_on:
+        - mongo
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017 # port: 27017
+        # - MONGO_IP=mongo # 'localhost' in ecs
+    container_name: mongo_db-container
+    networks:
+      - mern-docker-networks
+    volumes:
+      - mongoData:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=proShopv2
+     
+networks:
+  mern-docker-networks:
+volumes:
+  mongoData:
+    
